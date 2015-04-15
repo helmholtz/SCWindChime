@@ -13,22 +13,6 @@ SynthDef(\woodBlock, {|freq = 220, amp = 0.1, sustain = 1, bright = 1, pan = 0, 
 )
 
 (
-//ENVIRONMENT VARIABLES
-~speed = 30;
-~width = 400;
-~height = 600;
-~sides = 7;
-~elasticity = 0.99;
-~pitchList = [1, 2.572, 2.072, 4.644];
-~root = 82.5;
-~detune = 0.01;
-~trigger = false;
-)
-
-
-(
-
-//ACTION
 var polygon = Polygon(~sides, ~width, ~height);
 var ball = Ball2(0@0, 0.7.rand2 @ 0.7.rand2);
 var chime = WindChime(ball, polygon);
@@ -52,7 +36,7 @@ u.animate = true;
 
 u.drawFunc = {
 	Pen.translate(~width/2, ~height/2);  //Move origin to center
-	//Pen.rotate(u.frame*0.001);
+	//Pen.rotate(u.frame*0.001);         //Uncomment for spinning wind chime
 	Pen.alpha = 0.5;
 
 	chime.updateAll(~speed, ~elasticity, playFunc);
@@ -65,11 +49,17 @@ u.drawFunc = {
     polygon.points.size.do({|i|
         Pen.moveTo(polygon.points[i]);
         Pen.lineTo(polygon.points.wrapAt(i+1));
-		if ( chime.klang && (chime.sector == i), { Pen.alpha=1 }, { Pen.alpha=0.3 } );
+		if( chime.klang && (chime.sector == i), { Pen.alpha=1 }, { Pen.alpha=0.3 } );
 		Pen.stroke;
 	});
-
 };
+
+Routine({
+	inf.do({
+		( ~boostTime * rrand(0.75, 1.25) ).wait;
+		if( ball.velocity < 0.5, { ball.velocity = ball.velocity * ~boostAmount * rrand(0.75,1.25) } );
+	});
+}).play;
 
 )
 
