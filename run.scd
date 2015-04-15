@@ -18,7 +18,7 @@ SynthDef(\woodBlock, {|freq = 220, amp = 0.1, sustain = 1, bright = 1, pan = 0, 
 ~width = 400;
 ~height = 600;
 ~sides = 7;
-~elasticity = 0.6;
+~elasticity = 0.99;
 ~pitchList = [1, 2.572, 2.072, 4.644];
 ~root = 82.5;
 ~detune = 0.01;
@@ -32,9 +32,6 @@ SynthDef(\woodBlock, {|freq = 220, amp = 0.1, sustain = 1, bright = 1, pan = 0, 
 var polygon = Polygon(~sides, ~width, ~height);
 var ball = Ball2(0@0, 0.7.rand2 @ 0.7.rand2);
 var chime = WindChime(ball, polygon);
-var oldPosition = Point.new();
-var sector = 0;
-var klang = true;
 
 var playFunc = {|loudness, brightness, side|
 	Synth(\woodBlock, [
@@ -58,16 +55,7 @@ u.drawFunc = {
 	//Pen.rotate(u.frame*0.001);
 	Pen.alpha = 0.5;
 
-	oldPosition = ball.position;
-	ball.updatePosition(~speed);
-	sector = chime.getSector;
-
-	if( chime.isOutside(sector), {
-		chime.updateVelocity(sector, ~elasticity);
-		ball.position = oldPosition;
-		playFunc.value(chime.loudness, chime.brightness, sector);
-		klang = true }, { klang = false }
-	);
+	chime.updateAll(~speed, ~elasticity, playFunc);
 
 	Pen.fillColor = Color.blue;
 	Pen.fillOval(Rect.aboutPoint(ball.position, 20, 20));
@@ -77,7 +65,7 @@ u.drawFunc = {
     polygon.points.size.do({|i|
         Pen.moveTo(polygon.points[i]);
         Pen.lineTo(polygon.points.wrapAt(i+1));
-		if ( klang && sector == i, { Pen.alpha=1 }, { Pen.alpha=0.3 } );
+		if ( chime.klang && (chime.sector == i), { Pen.alpha=1 }, { Pen.alpha=0.3 } );
 		Pen.stroke;
 	});
 
