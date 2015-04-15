@@ -1,5 +1,5 @@
 # SCWindChime
-A windchime (of sorts) for SuperCollider. See [http://subnaught.org/supercollider](http://subnaught.org/supercollider) for more information.
+A windchime (of sorts) for SuperCollider. See [http://subnaught.org/supercollider/oo-windchime.html](http://subnaught.org/supercollider/oo-windchime.html) for more information.
 
 ## Installation
 
