@@ -57,7 +57,7 @@ u.drawFunc = {
 Routine({
 	inf.do({
 		( ~boostTime * rrand(0.75, 1.25) ).wait;
-		if( ball.velocity < 0.5, { ball.velocity = ball.velocity * ~boostAmount * rrand(0.75,1.25) } );
+		if( ball.velocity.rho < 0.5, { ball.velocity = ball.velocity * ~boostAmount * rrand(0.75,1.25) } );
 	});
 }).play;
 
